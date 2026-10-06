@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our date</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #0d120f;
+            color: #ffffff;
+            user-select: none;
+        }
+
+        .ambient-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            filter: blur(40px) saturate(140%);
+            transform: scale(1.1); /* Prevents blurred edges from showing white border */
+        }
+
+        .overlay-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="relative min-h-screen w-full flex flex-col justify-between items-center overflow-hidden">
+
+    <!-- Background Audio Element -->
+    <audio id="bgMusic" src="https://github.com/0urdate/0urdate.github.io/raw/refs/heads/main/zap.mp3" loop preload="auto"></audio>
+
+    <!-- Minimal Floating Music Toggle Button -->
+    <button id="musicToggle" aria-label="Toggle Music" class="fixed top-6 right-6 z-30 p-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white/80 hover:text-white shadow-lg transition-all duration-300 hover:bg-white/20 hover:scale-110 active:scale-95 focus:outline-none group">
+        <svg id="iconPlay" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <svg id="iconPause" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+    </button>
+
+    <!-- Dynamic Fluid Ambient Layer -->
+    <canvas id="gradientCanvas" class="ambient-canvas"></canvas>
+    
+    <!-- Floating Soft Particles Overlay Layer -->
+    <canvas id="particleCanvas" class="overlay-canvas"></canvas>
+
+    <!-- Semi-transparent Intro Card Overlay -->
+    <div id="introCard" class="fixed inset-0 z-20 flex items-center justify-center p-4 transition-all duration-700 opacity-100 scale-100">
+        <div class="relative bg-black/60 backdrop-blur-2xl border border-white/15 shadow-[0_12px_40px_0_rgba(0,0,0,0.6)] rounded-3xl p-8 sm:p-12 max-w-md w-full text-center text-white flex flex-col items-center space-y-6 transform transition-all duration-500 hover:border-white/25">
+            <!-- Glowing Background Ambient Blur -->
+            <div class="absolute -inset-1 bg-gradient-to-r from-emerald-500/15 to-pink-500/15 rounded-3xl blur-xl -z-10"></div>
+            
+            <!-- Soft Glowing Yellow Heart Icon -->
+            <div class="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center shadow-inner border border-white/15 animate-pulse">
+                <svg class="w-8 h-8 text-amber-300 drop-shadow-[0_0_12px_rgba(252,211,77,0.85)]" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+            </div>
+
+            <!-- Step 1 Content Wrapper -->
+            <div id="cardStep1" class="space-y-6 w-full flex flex-col items-center transition-all duration-500 opacity-100">
+                <!-- Title & Subtitle -->
+                <div class="space-y-2">
+                    <h1 class="text-2xl sm:text-3xl font-light tracking-wide text-white drop-shadow-md">
+                        Дорый день, мадмуазель
+                    </h1>
+                    <p class="text-sm text-white/80 font-light leading-relaxed">
+                        Позвольте Вас на пару слов
+                    </p>
+                </div>
+
+                <!-- Interactive Action Button -->
+                <button id="startButton" class="relative group overflow-hidden w-full py-3.5 px-8 rounded-2xl bg-gradient-to-r from-emerald-500/30 via-pink-500/30 to-emerald-500/30 border border-white/20 text-white font-medium text-lg tracking-wider shadow-lg hover:shadow-pink-500/20 hover:scale-[1.02] active:scale-95 transition-all duration-300">
+                    <span class="relative z-10 flex items-center justify-center gap-2">
+                        Начнём?
+                        <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                        </svg>
+                    </span>
+                    <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </button>
+            </div>
+
+            <!-- Step 2 Content (Text & Forward Arrow) -->
+            <div id="cardStep2" class="hidden space-y-6 w-full flex flex-col items-center transition-all duration-500 opacity-0 scale-95">
+                <p class="text-base sm:text-lg text-white/90 font-light leading-relaxed tracking-wide drop-shadow-md px-2">
+                    Мы знакомы не так давно, но мне кажется нам пора познакомиться поближе
+                </p>
+
+                <!-- Next Arrow Button to Step 3 -->
+                <button id="nextButton1" aria-label="Дальше" class="group relative p-4 rounded-full bg-gradient-to-r from-emerald-500/30 via-pink-500/30 to-emerald-500/30 border border-white/20 text-white shadow-lg hover:shadow-pink-500/20 hover:scale-110 active:scale-95 transition-all duration-300 focus:outline-none">
+                    <svg class="w-6 h-6 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Step 3 Content (New Block) -->
+            <div id="cardStep3" class="hidden space-y-6 w-full flex flex-col items-center transition-all duration-500 opacity-0 scale-95">
+                <p class="text-base sm:text-lg text-white/90 font-light leading-relaxed tracking-wide drop-shadow-md px-2">
+                    Общенье это очень хорошо, но пожалуй без встречь всё не то
+                </p>
+
+                <!-- Forward Arrow Button to Step 4 -->
+                <button id="nextButton2" aria-label="Дальше" class="group relative p-4 rounded-full bg-gradient-to-r from-emerald-500/30 via-pink-500/30 to-emerald-500/30 border border-white/20 text-white shadow-lg hover:shadow-pink-500/20 hover:scale-110 active:scale-95 transition-all duration-300 focus:outline-none">
+                    <svg class="w-6 h-6 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Step 4 Content (New Block) -->
+            <div id="cardStep4" class="hidden space-y-6 w-full flex flex-col items-center transition-all duration-500 opacity-0 scale-95">
+                <p class="text-base sm:text-lg text-white/90 font-light leading-relaxed tracking-wide drop-shadow-md px-2">
+                    Давай выберем место время и.....
+                </p>
+
+                <!-- Forward Arrow Button to Step 5 -->
+                <button id="nextButton3" aria-label="Дальше" class="group relative p-4 rounded-full bg-gradient-to-r from-emerald-500/30 via-pink-500/30 to-emerald-500/30 border border-white/20 text-white shadow-lg hover:shadow-pink-500/20 hover:scale-110 active:scale-95 transition-all duration-300 focus:outline-none">
+                    <svg class="w-6 h-6 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Step 5 Content (Date, Time, Location & Wishes Selection) -->
+            <div id="cardStep5" class="hidden space-y-4 w-full flex flex-col items-center transition-all duration-500 opacity-0 scale-95">
+                <p class="text-base text-white/90 font-light leading-relaxed tracking-wide drop-shadow-md px-2 text-center">
+                    Детали нашей встречи:
+                </p>
+
+                <div class="w-full space-y-2.5 text-left text-xs sm:text-sm">
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block font-light text-white/70 mb-1 ml-1">Дата</label>
+                            <input type="date" id="meetingDate" class="w-full bg-white/10 border border-white/20 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-pink-400/50 transition-colors backdrop-blur-md">
+                        </div>
+                        <div>
+                            <label class="block font-light text-white/70 mb-1 ml-1">Время</label>
+                            <input type="time" id="meetingTime" class="w-full bg-white/10 border border-white/20 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-pink-400/50 transition-colors backdrop-blur-md">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block font-light text-white/70 mb-1 ml-1">Место встречи</label>
+                        <input type="text" id="meetingLocation" placeholder="Например: Алея или просто походить по дворпм" class="w-full bg-white/10 border border-white/20 rounded-xl px-3 py-2 text-white placeholder-white/40 focus:outline-none focus:border-pink-400/50 transition-colors backdrop-blur-md">
+                    </div>
+                    <div>
+                        <label class="block font-light text-white/70 mb-1 ml-1">Пожелания</label>
+                        <input type="text" id="meetingWishes" placeholder="Вкусный кофе и маршмеллоу" class="w-full bg-white/10 border border-white/20 rounded-xl px-3 py-2 text-white placeholder-white/40 focus:outline-none focus:border-pink-400/50 transition-colors backdrop-blur-md">
+                    </div>
+                </div>
+
+                <button id="submitMeeting" class="relative group overflow-hidden w-full py-3 px-6 rounded-2xl bg-gradient-to-r from-emerald-500/30 via-pink-500/30 to-emerald-500/30 border border-white/20 text-white font-medium text-base tracking-wider shadow-lg hover:shadow-pink-500/20 hover:scale-[1.02] active:scale-95 transition-all duration-300 mt-1">
+                    <span class="relative z-10 flex items-center justify-center gap-2">
+                        Создать билет
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5l0 14M9 5l0 14M4 5h16a1 1 0 011 1v12a1 1 0 01-1 1H4a1 1 0 01-1-1V6a1 1 0 011-1z"/>
+                        </svg>
+                    </span>
+                </button>
+            </div>
+
+            <!-- Step 6 Content (Ticket Image Preview & Download) -->
+            <div id="cardStep6" class="hidden space-y-4 w-full flex flex-col items-center transition-all duration-500 opacity-0 scale-95">
+                <h3 class="text-xl font-light text-white tracking-wide drop-shadow-md">Твой билет готов! ✨</h3>
+                
+                <div class="w-full max-w-sm overflow-hidden rounded-2xl border border-white/20 shadow-2xl bg-black/40 backdrop-blur-md p-1">
+                    <img id="ticketImage" alt="Сгенерированный билет" class="w-full h-auto rounded-xl object-contain shadow-lg">
+                </div>
+
+                <div class="flex gap-2 w-full pt-1">
+                    <button id="downloadTicket" class="flex-1 py-2.5 px-3 rounded-xl bg-gradient-to-r from-emerald-500/30 to-pink-500/30 hover:from-emerald-500/50 hover:to-pink-500/50 border border-white/20 text-white text-xs sm:text-sm font-medium transition-all duration-300 flex items-center justify-center gap-1.5 shadow-lg hover:scale-105 active:scale-95">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                        Скачать
+                    </button>
+                    <button id="shareTicket" class="flex-1 py-2.5 px-3 rounded-xl bg-gradient-to-r from-pink-500/30 to-emerald-500/30 hover:from-pink-500/50 hover:to-emerald-500/50 border border-white/20 text-white text-xs sm:text-sm font-medium transition-all duration-300 flex items-center justify-center gap-1.5 shadow-lg hover:scale-105 active:scale-95">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+                        Поделиться
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ==========================================================================
+           БЛОК НАСТРОЕК (CONFIG)
+           Все параметры визуализации и палитры настраиваются в этом блоке:
+           ========================================================================== */
+        const CONFIG = {
+            // Фоновая музыкальная аудиодорожка
+            musicUrl: 'https://github.com/0urdate/0urdate.github.io/raw/refs/heads/main/zap.mp3',
+            // Цветовая палитра "Шёлковый Закат" (баланс мятно-изумрудных и ярко-шёлковых розовых тонов)
+            palette: [
+                { r: 52,  g: 211, b: 153 }, // Мятно-изумрудный
+                { r: 255, g: 120, b: 180 }, // Яркий шёлковый розовый
+                { r: 16,  g: 185, b: 129 }, // Насыщенный изумруд
+                { r: 244, g: 114, b: 182 }, // Нежно-розовый шёлк
+                { r: 4,   g: 120, b: 87  }, // Глубокий лесной изумруд
+                { r: 251, g: 207, b: 232 }  // Жемчужно-розовый шёлк
+            ],
+            speedFactor: 3.0,               // Скорость движения (Максимальная: 3.0)
+            baseBackground: '#0a0f0d',     // Тёмный фоновый оттенок
+            particleDensity: 10000,        // Плотность парящих частичек (меньше число = больше частиц)
+            interactiveRadiusRatio: 0.45   // Относительный размер пятна под курсором
+        };
+
+        const canvas = document.getElementById('gradientCanvas');
+        const ctx = canvas.getContext('2d');
+
+        const pCanvas = document.getElementById('particleCanvas');
+        const pCtx = pCanvas.getContext('2d');
+
+        let width, height;
+
+        class DynamicBlob {
+            constructor(x, y, radius, color, vx, vy) {
+                this.x = x;
+                this.y = y;
+                this.baseRadius = radius;
+                this.radius = radius;
+                this.color = color;
+                this.vx = vx;
+                this.vy = vy;
+                this.angle = Math.random() * Math.PI * 2;
+                this.angularVelocity = (Math.random() - 0.5) * 0.05;
+            }
+
+            update(width, height, speed) {
+                this.angle += this.angularVelocity * speed;
+                this.x += (this.vx + Math.sin(this.angle) * 1.5) * speed;
+                this.y += (this.vy + Math.cos(this.angle) * 1.5) * speed;
+
+                // Keep color nodes active on screen boundaries so neither color ever disappears
+                const margin = 50;
+                if (this.x < margin) { this.vx = Math.abs(this.vx); this.x = margin; }
+                if (this.x > width - margin) { this.vx = -Math.abs(this.vx); this.x = width - margin; }
+                if (this.y < margin) { this.vy = Math.abs(this.vy); this.y = margin; }
+                if (this.y > height - margin) { this.vy = -Math.abs(this.vy); this.y = height - margin; }
+
+                // Dynamic breathing ripple expansion
+                this.radius = this.baseRadius + Math.sin(this.angle * 3) * 60;
+            }
+
+            draw(ctx) {
+                const gradient = ctx.createRadialGradient(
+                    this.x, this.y, 0,
+                    this.x, this.y, Math.max(1, this.radius)
+                );
+                
+                const { r, g, b } = this.color;
+                gradient.addColorStop(0, `rgba(${r}, ${g}, ${b}, 0.9)`);
+                gradient.addColorStop(0.5, `rgba(${r}, ${g}, ${b}, 0.5)`);
+                gradient.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
+
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, Math.max(1, this.radius), 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.size = Math.random() * 2.5 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 0.4;
+                this.speedY = -Math.random() * 0.5 - 0.1;
+                this.opacity = Math.random() * 0.6 + 0.2;
+                this.isGreen = Math.random() > 0.5;
+            }
+
+            update() {
+                this.x += this.speedX * CONFIG.speedFactor;
+                this.y += this.speedY * CONFIG.speedFactor;
+
+                if (this.y < -10 || this.x < -10 || this.x > width + 10) {
+                    this.reset();
+                    this.y = height + 10;
+                }
+            }
+
+            draw(ctx) {
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.isGreen 
+                    ? `rgba(168, 230, 207, ${this.opacity})` 
+                    : `rgba(255, 192, 203, ${this.opacity})`;
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = this.isGreen ? '#a8e6cf' : '#ffc0cb';
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        let blobs = [];
+        let particles = [];
+
+        function init() {
+            width = canvas.width = pCanvas.width = window.innerWidth;
+            height = canvas.height = pCanvas.height = window.innerHeight;
+
+            blobs = [];
+            const currentPalette = CONFIG.palette;
+
+            // Balanced distribution across screen quadrants ensuring both green and pink are active
+            const nodePositions = [
+                { x: width * 0.25, y: height * 0.25, vx: 1.8, vy: 1.4 },
+                { x: width * 0.75, y: height * 0.25, vx: -1.6, vy: 1.8 },
+                { x: width * 0.25, y: height * 0.75, vx: 1.5, vy: -1.7 },
+                { x: width * 0.75, y: height * 0.75, vx: -1.9, vy: -1.5 },
+                { x: width * 0.50, y: height * 0.50, vx: 1.2, vy: -1.3 }
+            ];
+
+            nodePositions.forEach((pos, idx) => {
+                const color = currentPalette[idx % currentPalette.length];
+                const radius = Math.min(width, height) * 0.42;
+                blobs.push(new DynamicBlob(pos.x, pos.y, radius, color, pos.vx, pos.vy));
+            });
+
+            particles = [];
+            const particleCount = Math.floor((width * height) / CONFIG.particleDensity);
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animate() {
+            ctx.fillStyle = CONFIG.baseBackground;
+            ctx.fillRect(0, 0, width, height);
+
+            ctx.globalCompositeOperation = 'screen';
+            blobs.forEach(blob => {
+                blob.update(width, height, CONFIG.speedFactor);
+                blob.draw(ctx);
+            });
+
+            ctx.globalCompositeOperation = 'source-over';
+
+            pCtx.clearRect(0, 0, width, height);
+            particles.forEach(p => {
+                p.update();
+                p.draw(pCtx);
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', init);
+
+        /* ==========================================================================
+           УПРАВЛЕНИЕ МУЗЫКОЙ (AUDIO CONTROLLER)
+           ========================================================================== */
+        const bgMusic = document.getElementById('bgMusic');
+        const musicToggle = document.getElementById('musicToggle');
+        const iconPlay = document.getElementById('iconPlay');
+        const iconPause = document.getElementById('iconPause');
+
+        function updateAudioUI(isPlaying) {
+            if (isPlaying) {
+                iconPlay.classList.add('hidden');
+                iconPause.classList.remove('hidden');
+            } else {
+                iconPlay.classList.remove('hidden');
+                iconPause.classList.add('hidden');
+            }
+        }
+
+        function toggleAudio() {
+            if (bgMusic.paused) {
+                bgMusic.play().then(() => {
+                    updateAudioUI(true);
+                }).catch(err => console.log('Audio playback error:', err));
+            } else {
+                bgMusic.pause();
+                updateAudioUI(false);
+            }
+        }
+
+        musicToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleAudio();
+        });
+
+        const introCard = document.getElementById('introCard');
+        const startButton = document.getElementById('startButton');
+        const nextButton1 = document.getElementById('nextButton1');
+        const nextButton2 = document.getElementById('nextButton2');
+        const nextButton3 = document.getElementById('nextButton3');
+        const submitMeeting = document.getElementById('submitMeeting');
+        const cardStep1 = document.getElementById('cardStep1');
+        const cardStep2 = document.getElementById('cardStep2');
+        const cardStep3 = document.getElementById('cardStep3');
+        const cardStep4 = document.getElementById('cardStep4');
+        const cardStep5 = document.getElementById('cardStep5');
+        const cardStep6 = document.getElementById('cardStep6');
+        const ticketImage = document.getElementById('ticketImage');
+        const downloadTicket = document.getElementById('downloadTicket');
+        const shareTicket = document.getElementById('shareTicket');
+
+        let generatedTicketDataUrl = '';
+
+        /* ==========================================================================
+           ГЕНЕРАЦИЯ КРАСИВОГО БИЛЕТА (CANVAS RENDERER)
+           ========================================================================== */
+        function renderTicketCanvas(date, time, location, wishes) {
+            const tCanvas = document.createElement('canvas');
+            tCanvas.width = 1000;
+            tCanvas.height = 520;
+            const tCtx = tCanvas.getContext('2d');
+
+            // 1. Градиентный фон в стиле "Изумруд и Шёлк"
+            const bgGradient = tCtx.createLinearGradient(0, 0, tCanvas.width, tCanvas.height);
+            bgGradient.addColorStop(0, '#091510');
+            bgGradient.addColorStop(0.35, '#103e2e');
+            bgGradient.addColorStop(0.7, '#6b2046');
+            bgGradient.addColorStop(1, '#1f0d1a');
+            tCtx.fillStyle = bgGradient;
+            tCtx.fillRect(0, 0, tCanvas.width, tCanvas.height);
+
+            // 2. Волшебные частицы на билете
+            for (let i = 0; i < 45; i++) {
+                tCtx.beginPath();
+                tCtx.arc(Math.random() * tCanvas.width, Math.random() * tCanvas.height, Math.random() * 2.5 + 1, 0, Math.PI * 2);
+                tCtx.fillStyle = i % 2 === 0 ? 'rgba(52, 211, 153, 0.3)' : 'rgba(244, 114, 182, 0.3)';
+                tCtx.fill();
+            }
+
+            // 3. Рамка билета
+            tCtx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
+            tCtx.lineWidth = 3;
+            tCtx.strokeRect(30, 30, tCanvas.width - 60, tCanvas.height - 60);
+
+            // Внутренняя пунктирная нежная рамка
+            tCtx.strokeStyle = 'rgba(251, 207, 232, 0.35)';
+            tCtx.lineWidth = 1.5;
+            tCtx.setLineDash([8, 6]);
+            tCtx.strokeRect(42, 42, tCanvas.width - 84, tCanvas.height - 84);
+            tCtx.setLineDash([]);
+
+            // 4. Боковые вырезы билета (полукруги)
+            tCtx.fillStyle = '#0a0f0d';
+            tCtx.beginPath();
+            tCtx.arc(30, tCanvas.height / 2, 24, 0, Math.PI * 2);
+            tCtx.arc(tCanvas.width - 30, tCanvas.height / 2, 24, 0, Math.PI * 2);
+            tCtx.fill();
+
+            // 5. Линия отрыва корешка билета
+            const stubX = 720;
+            tCtx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
+            tCtx.lineWidth = 2;
+            tCtx.setLineDash([10, 8]);
+            tCtx.beginPath();
+            tCtx.moveTo(stubX, 42);
+            tCtx.lineTo(stubX, tCanvas.height - 42);
+            tCtx.stroke();
+            tCtx.setLineDash([]);
+
+            // 6. Заголовок билета
+            tCtx.fillStyle = '#fbcfe8';
+            tCtx.font = '500 24px "Plus Jakarta Sans", sans-serif';
+            tCtx.fillText('ПРИГЛАШЕНИЕ НА СВИДАНИЕ', 70, 88);
+
+            tCtx.fillStyle = '#34d399';
+            tCtx.font = '300 13px "Plus Jakarta Sans", sans-serif';
+            tCtx.fillText('ОСОБЕННЫЙ МОМЕНТ • VIP PASS', 70, 114);
+
+            // Золотистое сердечко
+            tCtx.fillStyle = '#fcd34d';
+            tCtx.font = '28px sans-serif';
+            tCtx.fillText('💛', 640, 95);
+
+            // Разделительная черта
+            tCtx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+            tCtx.lineWidth = 1;
+            tCtx.beginPath();
+            tCtx.moveTo(70, 132);
+            tCtx.lineTo(670, 132);
+            tCtx.stroke();
+
+            // 7. Поля данных
+            const formatText = (val, defaultVal) => (val && val.trim() ? val.trim() : defaultVal);
+
+            const displayDate = formatText(date, 'Дата не указана');
+            const displayTime = formatText(time, 'Время по согласованию');
+            const displayLocation = formatText(location, 'По месту аосмотрим');
+            const displayWishes = formatText(wishes, 'Прекрасное настроение');
+
+            function drawField(label, value, x, y, valueColor = '#ffffff') {
+                tCtx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+                tCtx.font = '300 13px "Plus Jakarta Sans", sans-serif';
+                tCtx.fillText(label.toUpperCase(), x, y);
+
+                tCtx.fillStyle = valueColor;
+                tCtx.font = '500 18px "Plus Jakarta Sans", sans-serif';
+
+                let truncated = value;
+                if (tCtx.measureText(truncated).width > 260) {
+                    while (tCtx.measureText(truncated + '...').width > 260 && truncated.length > 0) {
+                        truncated = truncated.slice(0, -1);
+                    }
+                    truncated += '...';
+                }
+                tCtx.fillText(truncated, x, y + 26);
+            }
+
+            drawField('📅 Дата', displayDate, 70, 175, '#f472b6');
+            drawField('⏰ Время', displayTime, 370, 175, '#34d399');
+            drawField('📍 Место встречи', displayLocation, 70, 265, '#ffffff');
+            drawField('💬 Пожелания', displayWishes, 70, 355, '#fbcfe8');
+
+            // Подпись снизу
+            tCtx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+            tCtx.font = '300 12px "Plus Jakarta Sans", sans-serif';
+            tCtx.fillText('Действителен для одного прекрасного вечера', 70, 450);
+
+            // 8. Корешок билета (Правая секция)
+            tCtx.save();
+            tCtx.translate(stubX + 140, 260);
+            tCtx.rotate(-Math.PI / 2);
+
+            tCtx.fillStyle = '#ffffff';
+            tCtx.font = '600 18px "Plus Jakarta Sans", sans-serif';
+            tCtx.textAlign = 'center';
+            tCtx.fillText('DATE TICKET', 0, -40);
+
+            tCtx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+            tCtx.font = '300 12px "Plus Jakarta Sans", sans-serif';
+            tCtx.fillText('NO. ' + Math.floor(100000 + Math.random() * 900000), 0, -18);
+
+            // Имитация штрих-кода
+            tCtx.fillStyle = '#ffffff';
+            let bx = -100;
+            const barHeight = 40;
+            for (let i = 0; i < 32; i++) {
+                const bw = (i % 3 === 0) ? 4 : (i % 2 === 0 ? 2 : 1);
+                tCtx.fillRect(bx, 0, bw, barHeight);
+                bx += bw + (i % 4 === 0 ? 4 : 2);
+            }
+
+            tCtx.restore();
+
+            return tCanvas.toDataURL('image/png');
+        }
+
+        function transitionStep(fromElem, toElem) {
+            if (fromElem && toElem) {
+                fromElem.classList.add('opacity-0', 'scale-95');
+                setTimeout(() => {
+                    fromElem.classList.add('hidden');
+                    toElem.classList.remove('hidden');
+                    setTimeout(() => {
+                        toElem.classList.remove('opacity-0', 'scale-95');
+                        toElem.classList.add('opacity-100', 'scale-100');
+                    }, 50);
+                }, 300);
+            }
+        }
+
+        function startExperience() {
+            if (bgMusic.paused) {
+                bgMusic.play().then(() => {
+                    updateAudioUI(true);
+                }).catch(err => console.log('Audio playback error:', err));
+            }
+            transitionStep(cardStep1, cardStep2);
+        }
+
+        function goToStep3() {
+            transitionStep(cardStep2, cardStep3);
+        }
+
+        function goToStep4() {
+            transitionStep(cardStep3, cardStep4);
+        }
+
+        function goToStep5() {
+            transitionStep(cardStep4, cardStep5);
+        }
+
+        function generateTicket() {
+            const dateVal = document.getElementById('meetingDate').value;
+            const timeVal = document.getElementById('meetingTime').value;
+            const locationVal = document.getElementById('meetingLocation').value;
+            const wishesVal = document.getElementById('meetingWishes').value;
+
+            generatedTicketDataUrl = renderTicketCanvas(dateVal, timeVal, locationVal, wishesVal);
+            if (ticketImage) {
+                ticketImage.src = generatedTicketDataUrl;
+            }
+
+            transitionStep(cardStep5, cardStep6);
+        }
+
+        if (startButton) {
+            startButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                startExperience();
+            });
+        }
+
+        if (nextButton1) {
+            nextButton1.addEventListener('click', (e) => {
+                e.stopPropagation();
+                goToStep3();
+            });
+        }
+
+        if (nextButton2) {
+            nextButton2.addEventListener('click', (e) => {
+                e.stopPropagation();
+                goToStep4();
+            });
+        }
+
+        if (nextButton3) {
+            nextButton3.addEventListener('click', (e) => {
+                e.stopPropagation();
+                goToStep5();
+            });
+        }
+
+        if (submitMeeting) {
+            submitMeeting.addEventListener('click', (e) => {
+                e.stopPropagation();
+                generateTicket();
+            });
+        }
+
+        if (downloadTicket) {
+            downloadTicket.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (generatedTicketDataUrl) {
+                    const link = document.createElement('a');
+                    link.download = 'Date-Ticket.png';
+                    link.href = generatedTicketDataUrl;
+                    link.click();
+                }
+            });
+        }
+
+        if (shareTicket) {
+            shareTicket.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                if (!generatedTicketDataUrl) return;
+
+                try {
+                    const response = await fetch(generatedTicketDataUrl);
+                    const blob = await response.blob();
+                    const file = new File([blob], 'Date-Ticket.png', { type: 'image/png' });
+
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        await navigator.share({
+                            title: 'Приглашение на свидание',
+                            text: 'Вот твой билет на наш особенный вечер! ✨',
+                            files: [file]
+                        });
+                    } else if (navigator.share) {
+                        await navigator.share({
+                            title: 'Приглашение на свидание',
+                            text: 'Вот твой билет на наш особенный вечер! ✨',
+                            url: window.location.href
+                        });
+                    } else {
+                        // Фолбэк для старых браузеров
+                        const link = document.createElement('a');
+                        link.download = 'Date-Ticket.png';
+                        link.href = generatedTicketDataUrl;
+                        link.click();
+                    }
+                } catch (err) {
+                    if (err.name !== 'AbortError') {
+                        console.log('Ошибка при попытке поделиться:', err);
+                    }
+                }
+            });
+        }
+
+        function initAudioOnInteraction() {
+            if (bgMusic.paused) {
+                bgMusic.play().then(() => {
+                    updateAudioUI(true);
+                }).catch(() => {});
+            }
+            window.removeEventListener('pointerdown', initAudioOnInteraction);
+        }
+        window.addEventListener('pointerdown', initAudioOnInteraction);
+
+        window.onload = function() {
+            init();
+            animate();
+            
+            bgMusic.play().then(() => {
+                updateAudioUI(true);
+            }).catch(() => {
+                updateAudioUI(false);
+            });
+        };
+    </script>
+</body>
+</html>
