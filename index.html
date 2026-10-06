@@ -161,7 +161,7 @@
                     </div>
                     <div>
                         <label class="block font-light text-white/70 mb-1 ml-1">Место встречи</label>
-                        <input type="text" id="meetingLocation" placeholder="Например: Алея или просто походить по дворпм" class="w-full bg-white/10 border border-white/20 rounded-xl px-3 py-2 text-white placeholder-white/40 focus:outline-none focus:border-pink-400/50 transition-colors backdrop-blur-md">
+                        <input type="text" id="meetingLocation" placeholder="Например: Алея" class="w-full bg-white/10 border border-white/20 rounded-xl px-3 py-2 text-white placeholder-white/40 focus:outline-none focus:border-pink-400/50 transition-colors backdrop-blur-md">
                     </div>
                     <div>
                         <label class="block font-light text-white/70 mb-1 ml-1">Пожелания</label>
@@ -218,9 +218,9 @@
                 { r: 4,   g: 120, b: 87  }, // Глубокий лесной изумруд
                 { r: 251, g: 207, b: 232 }  // Жемчужно-розовый шёлк
             ],
-            speedFactor: 3.0,               // Скорость движения (Максимальная: 3.0)
+            speedFactor: 1.0,               // Скорость движения (Максимальная: 3.0)
             baseBackground: '#0a0f0d',     // Тёмный фоновый оттенок
-            particleDensity: 10000,        // Плотность парящих частичек (меньше число = больше частиц)
+            particleDensity: 20000,        // Плотность парящих частичек (меньше число = больше частиц)
             interactiveRadiusRatio: 0.45   // Относительный размер пятна под курсором
         };
 
@@ -463,13 +463,6 @@
             tCtx.strokeRect(42, 42, tCanvas.width - 84, tCanvas.height - 84);
             tCtx.setLineDash([]);
 
-            // 4. Боковые вырезы билета (полукруги)
-            tCtx.fillStyle = '#0a0f0d';
-            tCtx.beginPath();
-            tCtx.arc(30, tCanvas.height / 2, 24, 0, Math.PI * 2);
-            tCtx.arc(tCanvas.width - 30, tCanvas.height / 2, 24, 0, Math.PI * 2);
-            tCtx.fill();
-
             // 5. Линия отрыва корешка билета
             const stubX = 720;
             tCtx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
@@ -484,7 +477,7 @@
             // 6. Заголовок билета
             tCtx.fillStyle = '#fbcfe8';
             tCtx.font = '500 24px "Plus Jakarta Sans", sans-serif';
-            tCtx.fillText('ПРИГЛАШЕНИЕ НА СВИДАНИЕ', 70, 88);
+            tCtx.fillText('ПРИГЛАШЕНИЕ НА ПРЕКРАСНЫЙ ВЕЧЕР', 70, 88);
 
             tCtx.fillStyle = '#34d399';
             tCtx.font = '300 13px "Plus Jakarta Sans", sans-serif';
@@ -508,7 +501,7 @@
 
             const displayDate = formatText(date, 'Дата не указана');
             const displayTime = formatText(time, 'Время по согласованию');
-            const displayLocation = formatText(location, 'По месту аосмотрим');
+            const displayLocation = formatText(location, 'По месту посмотрим)))');
             const displayWishes = formatText(wishes, 'Прекрасное настроение');
 
             function drawField(label, value, x, y, valueColor = '#ffffff') {
