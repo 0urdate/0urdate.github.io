@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
@@ -27,7 +27,7 @@
             height: 100%;
             z-index: 1;
             filter: blur(40px) saturate(140%);
-            transform: scale(1.1); /* Prevents blurred edges from showing white border */
+            transform: scale(1.1);
         }
 
         .overlay-canvas {
@@ -39,12 +39,31 @@
             z-index: 2;
             pointer-events: none;
         }
+
+        /* Анимация для бегущей строки */
+        @keyframes marquee {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+
+        .animate-marquee {
+            display: inline-block;
+            white-space: nowrap;
+            animation: marquee 14s linear infinite;
+        }
     </style>
 </head>
 <body class="relative min-h-screen w-full flex flex-col justify-between items-center overflow-hidden">
 
     <!-- Background Audio Element -->
     <audio id="bgMusic" src="https://github.com/0urdate/0urdate.github.io/raw/refs/heads/main/zap.mp3" loop preload="auto"></audio>
+
+    <!-- Бегущая строка сверху -->
+    <div id="marqueeContainer" class="fixed top-0 left-0 w-full z-40 bg-black/40 backdrop-blur-md border-b border-white/10 py-1.5 overflow-hidden transition-opacity duration-500 opacity-0 pointer-events-none">
+        <div class="animate-marquee text-xs sm:text-sm font-light tracking-wide text-white/90">
+            🎵 Сейчас играет: Монеточка — Запорожец &nbsp;&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;&nbsp; 🎵 Сейчас играет: Монеточка — Запорожец
+        </div>
+    </div>
 
     <!-- Minimal Floating Music Toggle Button -->
     <button id="musicToggle" aria-label="Toggle Music" class="fixed top-6 right-6 z-30 p-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white/80 hover:text-white shadow-lg transition-all duration-300 hover:bg-white/20 hover:scale-110 active:scale-95 focus:outline-none group">
@@ -81,7 +100,7 @@
                 <!-- Title & Subtitle -->
                 <div class="space-y-2">
                     <h1 class="text-2xl sm:text-3xl font-light tracking-wide text-white drop-shadow-md">
-                        Дорый день, мадмуазель
+                        Добрый день, мадмуазель
                     </h1>
                     <p class="text-sm text-white/80 font-light leading-relaxed">
                         Позвольте Вас на пару слов
@@ -100,13 +119,12 @@
                 </button>
             </div>
 
-            <!-- Step 2 Content (Text & Forward Arrow) -->
+            <!-- Step 2 Content -->
             <div id="cardStep2" class="hidden space-y-6 w-full flex flex-col items-center transition-all duration-500 opacity-0 scale-95">
                 <p class="text-base sm:text-lg text-white/90 font-light leading-relaxed tracking-wide drop-shadow-md px-2">
                     Мы знакомы не так давно, но мне кажется нам пора познакомиться поближе
                 </p>
 
-                <!-- Next Arrow Button to Step 3 -->
                 <button id="nextButton1" aria-label="Дальше" class="group relative p-4 rounded-full bg-gradient-to-r from-emerald-500/30 via-pink-500/30 to-emerald-500/30 border border-white/20 text-white shadow-lg hover:shadow-pink-500/20 hover:scale-110 active:scale-95 transition-all duration-300 focus:outline-none">
                     <svg class="w-6 h-6 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
@@ -114,13 +132,12 @@
                 </button>
             </div>
 
-            <!-- Step 3 Content (New Block) -->
+            <!-- Step 3 Content -->
             <div id="cardStep3" class="hidden space-y-6 w-full flex flex-col items-center transition-all duration-500 opacity-0 scale-95">
                 <p class="text-base sm:text-lg text-white/90 font-light leading-relaxed tracking-wide drop-shadow-md px-2">
                     Общенье это очень хорошо, но пожалуй без встречь всё не то
                 </p>
 
-                <!-- Forward Arrow Button to Step 4 -->
                 <button id="nextButton2" aria-label="Дальше" class="group relative p-4 rounded-full bg-gradient-to-r from-emerald-500/30 via-pink-500/30 to-emerald-500/30 border border-white/20 text-white shadow-lg hover:shadow-pink-500/20 hover:scale-110 active:scale-95 transition-all duration-300 focus:outline-none">
                     <svg class="w-6 h-6 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
@@ -128,13 +145,12 @@
                 </button>
             </div>
 
-            <!-- Step 4 Content (New Block) -->
+            <!-- Step 4 Content -->
             <div id="cardStep4" class="hidden space-y-6 w-full flex flex-col items-center transition-all duration-500 opacity-0 scale-95">
                 <p class="text-base sm:text-lg text-white/90 font-light leading-relaxed tracking-wide drop-shadow-md px-2">
                     Давай выберем время, место и.....
                 </p>
 
-                <!-- Forward Arrow Button to Step 5 -->
                 <button id="nextButton3" aria-label="Дальше" class="group relative p-4 rounded-full bg-gradient-to-r from-emerald-500/30 via-pink-500/30 to-emerald-500/30 border border-white/20 text-white shadow-lg hover:shadow-pink-500/20 hover:scale-110 active:scale-95 transition-all duration-300 focus:outline-none">
                     <svg class="w-6 h-6 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
@@ -142,7 +158,7 @@
                 </button>
             </div>
 
-            <!-- Step 5 Content (Date, Time, Location & Wishes Selection) -->
+            <!-- Step 5 Content -->
             <div id="cardStep5" class="hidden space-y-4 w-full flex flex-col items-center transition-all duration-500 opacity-0 scale-95">
                 <p class="text-base text-white/90 font-light leading-relaxed tracking-wide drop-shadow-md px-2 text-center">
                     Детали нашей встречи:
@@ -161,7 +177,7 @@
                     </div>
                     <div>
                         <label class="block font-light text-white/70 mb-1 ml-1">Место встречи</label>
-                        <input type="text" id="meetingLocation" placeholder="Например: Алея" class="w-full bg-white/10 border border-white/20 rounded-xl px-3 py-2 text-white placeholder-white/40 focus:outline-none focus:border-pink-400/50 transition-colors backdrop-blur-md">
+                        <input type="text" id="meetingLocation" placeholder="Например: Аллея" class="w-full bg-white/10 border border-white/20 rounded-xl px-3 py-2 text-white placeholder-white/40 focus:outline-none focus:border-pink-400/50 transition-colors backdrop-blur-md">
                     </div>
                     <div>
                         <label class="block font-light text-white/70 mb-1 ml-1">Пожелания</label>
@@ -179,7 +195,7 @@
                 </button>
             </div>
 
-            <!-- Step 6 Content (Ticket Image Preview & Download) -->
+            <!-- Step 6 Content -->
             <div id="cardStep6" class="hidden space-y-4 w-full flex flex-col items-center transition-all duration-500 opacity-0 scale-95">
                 <h3 class="text-xl font-light text-white tracking-wide drop-shadow-md">Твой билет готов! ✨</h3>
                 
@@ -202,26 +218,20 @@
     </div>
 
     <script>
-        /* ==========================================================================
-           БЛОК НАСТРОЕК (CONFIG)
-           Все параметры визуализации и палитры настраиваются в этом блоке:
-           ========================================================================== */
         const CONFIG = {
-            // Фоновая музыкальная аудиодорожка
             musicUrl: 'https://github.com/0urdate/0urdate.github.io/raw/refs/heads/main/zap.mp3',
-            // Цветовая палитра "Шёлковый Закат" (баланс мятно-изумрудных и ярко-шёлковых розовых тонов)
             palette: [
-                { r: 52,  g: 211, b: 153 }, // Мятно-изумрудный
-                { r: 255, g: 120, b: 180 }, // Яркий шёлковый розовый
-                { r: 16,  g: 185, b: 129 }, // Насыщенный изумруд
-                { r: 244, g: 114, b: 182 }, // Нежно-розовый шёлк
-                { r: 4,   g: 120, b: 87  }, // Глубокий лесной изумруд
-                { r: 251, g: 207, b: 232 }  // Жемчужно-розовый шёлк
+                { r: 52,  g: 211, b: 153 },
+                { r: 255, g: 120, b: 180 },
+                { r: 16,  g: 185, b: 129 },
+                { r: 244, g: 114, b: 182 },
+                { r: 4,   g: 120, b: 87  },
+                { r: 251, g: 207, b: 232 }
             ],
-            speedFactor: 1.0,               // Скорость движения (Максимальная: 3.0)
-            baseBackground: '#0a0f0d',     // Тёмный фоновый оттенок
-            particleDensity: 20000,        // Плотность парящих частичек (меньше число = больше частиц)
-            interactiveRadiusRatio: 0.45   // Относительный размер пятна под курсором
+            speedFactor: 1.0,
+            baseBackground: '#0a0f0d',
+            particleDensity: 20000,
+            interactiveRadiusRatio: 0.45
         };
 
         const canvas = document.getElementById('gradientCanvas');
@@ -250,14 +260,12 @@
                 this.x += (this.vx + Math.sin(this.angle) * 1.5) * speed;
                 this.y += (this.vy + Math.cos(this.angle) * 1.5) * speed;
 
-                // Keep color nodes active on screen boundaries so neither color ever disappears
                 const margin = 50;
                 if (this.x < margin) { this.vx = Math.abs(this.vx); this.x = margin; }
                 if (this.x > width - margin) { this.vx = -Math.abs(this.vx); this.x = width - margin; }
                 if (this.y < margin) { this.vy = Math.abs(this.vy); this.y = margin; }
                 if (this.y > height - margin) { this.vy = -Math.abs(this.vy); this.y = height - margin; }
 
-                // Dynamic breathing ripple expansion
                 this.radius = this.baseRadius + Math.sin(this.angle * 3) * 60;
             }
 
@@ -328,7 +336,6 @@
             blobs = [];
             const currentPalette = CONFIG.palette;
 
-            // Balanced distribution across screen quadrants ensuring both green and pink are active
             const nodePositions = [
                 { x: width * 0.25, y: height * 0.25, vx: 1.8, vy: 1.4 },
                 { x: width * 0.75, y: height * 0.25, vx: -1.6, vy: 1.8 },
@@ -374,20 +381,26 @@
         window.addEventListener('resize', init);
 
         /* ==========================================================================
-           УПРАВЛЕНИЕ МУЗЫКОЙ (AUDIO CONTROLLER)
+           УПРАВЛЕНИЕ МУЗЫКОЙ И БЕГУЩЕЙ СТРОКОЙ
            ========================================================================== */
         const bgMusic = document.getElementById('bgMusic');
         const musicToggle = document.getElementById('musicToggle');
         const iconPlay = document.getElementById('iconPlay');
         const iconPause = document.getElementById('iconPause');
+        const marqueeContainer = document.getElementById('marqueeContainer');
+
+        // Устанавливаем тихий уровень громкости (30%)
+        bgMusic.volume = 0.3;
 
         function updateAudioUI(isPlaying) {
             if (isPlaying) {
                 iconPlay.classList.add('hidden');
                 iconPause.classList.remove('hidden');
+                marqueeContainer.classList.remove('opacity-0');
             } else {
                 iconPlay.classList.remove('hidden');
                 iconPause.classList.add('hidden');
+                marqueeContainer.classList.add('opacity-0');
             }
         }
 
@@ -407,34 +420,29 @@
             toggleAudio();
         });
 
-        const introCard = document.getElementById('introCard');
-        const startButton = document.getElementById('startButton');
-        const nextButton1 = document.getElementById('nextButton1');
-        const nextButton2 = document.getElementById('nextButton2');
-        const nextButton3 = document.getElementById('nextButton3');
-        const submitMeeting = document.getElementById('submitMeeting');
         const cardStep1 = document.getElementById('cardStep1');
         const cardStep2 = document.getElementById('cardStep2');
         const cardStep3 = document.getElementById('cardStep3');
         const cardStep4 = document.getElementById('cardStep4');
         const cardStep5 = document.getElementById('cardStep5');
         const cardStep6 = document.getElementById('cardStep6');
+        const startButton = document.getElementById('startButton');
+        const nextButton1 = document.getElementById('nextButton1');
+        const nextButton2 = document.getElementById('nextButton2');
+        const nextButton3 = document.getElementById('nextButton3');
+        const submitMeeting = document.getElementById('submitMeeting');
         const ticketImage = document.getElementById('ticketImage');
         const downloadTicket = document.getElementById('downloadTicket');
         const shareTicket = document.getElementById('shareTicket');
 
         let generatedTicketDataUrl = '';
 
-        /* ==========================================================================
-           ГЕНЕРАЦИЯ КРАСИВОГО БИЛЕТА (CANVAS RENDERER)
-           ========================================================================== */
         function renderTicketCanvas(date, time, location, wishes) {
             const tCanvas = document.createElement('canvas');
             tCanvas.width = 1000;
             tCanvas.height = 520;
             const tCtx = tCanvas.getContext('2d');
 
-            // 1. Градиентный фон в стиле "Изумруд и Шёлк"
             const bgGradient = tCtx.createLinearGradient(0, 0, tCanvas.width, tCanvas.height);
             bgGradient.addColorStop(0, '#091510');
             bgGradient.addColorStop(0.35, '#103e2e');
@@ -443,7 +451,6 @@
             tCtx.fillStyle = bgGradient;
             tCtx.fillRect(0, 0, tCanvas.width, tCanvas.height);
 
-            // 2. Волшебные частицы на билете
             for (let i = 0; i < 45; i++) {
                 tCtx.beginPath();
                 tCtx.arc(Math.random() * tCanvas.width, Math.random() * tCanvas.height, Math.random() * 2.5 + 1, 0, Math.PI * 2);
@@ -451,19 +458,16 @@
                 tCtx.fill();
             }
 
-            // 3. Рамка билета
             tCtx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
             tCtx.lineWidth = 3;
             tCtx.strokeRect(30, 30, tCanvas.width - 60, tCanvas.height - 60);
 
-            // Внутренняя пунктирная нежная рамка
             tCtx.strokeStyle = 'rgba(251, 207, 232, 0.35)';
             tCtx.lineWidth = 1.5;
             tCtx.setLineDash([8, 6]);
             tCtx.strokeRect(42, 42, tCanvas.width - 84, tCanvas.height - 84);
             tCtx.setLineDash([]);
 
-            // 5. Линия отрыва корешка билета
             const stubX = 720;
             tCtx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
             tCtx.lineWidth = 2;
@@ -474,7 +478,6 @@
             tCtx.stroke();
             tCtx.setLineDash([]);
 
-            // 6. Заголовок билета
             tCtx.fillStyle = '#fbcfe8';
             tCtx.font = '500 24px "Plus Jakarta Sans", sans-serif';
             tCtx.fillText('ПРИГЛАШЕНИЕ НА ПРЕКРАСНЫЙ ВЕЧЕР', 70, 88);
@@ -483,12 +486,10 @@
             tCtx.font = '300 13px "Plus Jakarta Sans", sans-serif';
             tCtx.fillText('ОСОБЕННЫЙ МОМЕНТ • VIP PASS', 70, 114);
 
-            // Золотистое сердечко
             tCtx.fillStyle = '#fcd34d';
             tCtx.font = '28px sans-serif';
             tCtx.fillText('💛', 640, 95);
 
-            // Разделительная черта
             tCtx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
             tCtx.lineWidth = 1;
             tCtx.beginPath();
@@ -496,7 +497,6 @@
             tCtx.lineTo(670, 132);
             tCtx.stroke();
 
-            // 7. Поля данных
             const formatText = (val, defaultVal) => (val && val.trim() ? val.trim() : defaultVal);
 
             const displayDate = formatText(date, 'Дата не указана');
@@ -527,7 +527,6 @@
             drawField('📍 Место встречи', displayLocation, 70, 265, '#ffffff');
             drawField('💬 Пожелания', displayWishes, 70, 355, '#fbcfe8');
 
-            // Подпись снизу
             tCtx.fillStyle = 'rgba(255, 255, 255, 0.4)';
             tCtx.font = '300 12px "Plus Jakarta Sans", sans-serif';
             tCtx.fillText('Действителен для одного прекрасного вечера', 70, 450);
@@ -542,11 +541,12 @@
             tCtx.textAlign = 'center';
             tCtx.fillText('DATE TICKET', 0, -40);
 
-            tCtx.fillStyle = 'rgba(255, 255, 255, 0.6)';
-            tCtx.font = '300 12px "Plus Jakarta Sans", sans-serif';
-            tCtx.fillText('NO. ' + Math.floor(100000 + Math.random() * 900000), 0, -18);
+            // Замена номера билета на романтичную фразу
+            tCtx.fillStyle = '#fbcfe8';
+            tCtx.font = '300 13px "Plus Jakarta Sans", sans-serif';
+            tCtx.textAlign = 'center';
+            tCtx.fillText('Ты всегда номер один ❤️️', 0, -16);
 
-            // Имитация штрих-кода
             tCtx.fillStyle = '#ffffff';
             let bx = -100;
             const barHeight = 40;
@@ -680,7 +680,6 @@
                             url: window.location.href
                         });
                     } else {
-                        // Фолбэк для старых браузеров
                         const link = document.createElement('a');
                         link.download = 'Date-Ticket.png';
                         link.href = generatedTicketDataUrl;
