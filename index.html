@@ -449,6 +449,20 @@
 
         let generatedTicketDataUrl = '';
 
+        /**
+         * Преобразует строку даты из формата YYYY-MM-DD (input type="date")
+         * в формат ДД.ММ.ГГГГ для красивого отображения в билете.
+         */
+        function formatDateToDDMMYYYY(rawDate) {
+            if (!rawDate || !rawDate.trim()) return '';
+            const parts = rawDate.trim().split('-');
+            if (parts.length === 3) {
+                const [year, month, day] = parts;
+                return `${day}.${month}.${year}`;
+            }
+            return rawDate.trim();
+        }
+
         function renderTicketCanvas(date, time, location, wishes) {
             const tCanvas = document.createElement('canvas');
             tCanvas.width = 1000;
@@ -515,7 +529,9 @@
 
             const formatText = (val, defaultVal) => (val && val.trim() ? val.trim() : defaultVal);
 
-            const displayDate = formatText(date, 'Дата не указана');
+            // Форматируем дату в дд.мм.гггг перед выводом на билет
+            const formattedDate = formatDateToDDMMYYYY(date);
+            const displayDate = formatText(formattedDate, 'Дата не указана');
             const displayTime = formatText(time, 'Время по согласованию');
             const displayLocation = formatText(location, 'По месту посмотрим)))');
             const displayWishes = formatText(wishes, 'Прекрасное настроение');
@@ -696,13 +712,13 @@
                     if (navigator.canShare && navigator.canShare({ files: [file] })) {
                         await navigator.share({
                             title: 'Приглашение на встречу',
-                            text: 'Вот твой билет на наше рандеву',
+                            text: 'Вот твой билет на наше рандеву)',
                             files: [file]
                         });
                     } else if (navigator.share) {
                         await navigator.share({
                             title: 'Приглашение на встречу',
-                            text: 'Вот твой билет на наше рандеву',
+                            text: 'Вот твой билет на наше рандеву)',
                             url: window.location.href
                         });
                     } else {
