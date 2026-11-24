@@ -14,7 +14,8 @@
             margin: 0;
             padding: 0;
             overflow: hidden;
-            background-color: #0d120f;
+            /* Тёмно-синий базовый фон вместо тёмно-зелёного */
+            background-color: #090d16;
             color: #ffffff;
             user-select: none;
         }
@@ -85,13 +86,21 @@
     <!-- Semi-transparent Intro Card Overlay -->
     <div id="introCard" class="fixed inset-0 z-20 flex items-center justify-center p-4 transition-all duration-700 opacity-100 scale-100">
         <div class="relative bg-black/60 backdrop-blur-2xl border border-white/15 shadow-[0_12px_40px_0_rgba(0,0,0,0.6)] rounded-3xl p-8 sm:p-12 max-w-md w-full text-center text-white flex flex-col items-center space-y-6 transform transition-all duration-500 hover:border-white/25">
-            <!-- Glowing Background Ambient Blur -->
-            <div class="absolute -inset-1 bg-gradient-to-r from-emerald-500/15 to-pink-500/15 rounded-3xl blur-xl -z-10"></div>
+            <!-- Glowing Background Ambient Blur (Синий + Розовый) -->
+            <div class="absolute -inset-1 bg-gradient-to-r from-blue-500/15 to-pink-500/15 rounded-3xl blur-xl -z-10"></div>
             
-            <!-- Soft Glowing Yellow Heart Icon -->
+            <!-- Soft Glowing Yellow Flask Icon (Колба) -->
             <div class="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center shadow-inner border border-white/15 animate-pulse">
-                <svg class="w-8 h-8 text-amber-300 drop-shadow-[0_0_12px_rgba(252,211,77,0.85)]" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                <svg class="w-8 h-8 text-amber-300 drop-shadow-[0_0_12px_rgba(252,211,77,0.85)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <!-- Горлышко и корпус конической колбы -->
+                    <path d="M9 3h6" />
+                    <path d="M10 3v5.5L4.5 18a2 2 0 0 0 1.7 3h11.6a2 2 0 0 0 1.7-3L14 8.5V3" />
+                    <!-- Жидкость внутри колбы -->
+                    <path d="M6.5 15h11l1.8 3a1 1 0 0 1-.8 1.5H5.5a1 1 0 0 1-.8-1.5l1.8-3z" fill="currentColor" fill-opacity="0.45" stroke="none" />
+                    <!-- Пузырьки реакции -->
+                    <circle cx="10.5" cy="17.5" r="0.8" fill="currentColor" stroke="none" />
+                    <circle cx="13.5" cy="16.5" r="0.6" fill="currentColor" stroke="none" />
+                    <circle cx="12" cy="13" r="0.7" fill="currentColor" stroke="none" />
                 </svg>
             </div>
 
@@ -100,15 +109,15 @@
                 <!-- Title & Subtitle -->
                 <div class="space-y-2">
                     <h1 class="text-2xl sm:text-3xl font-light tracking-wide text-white drop-shadow-md">
-                        Добрый день, мадмуазель
+                        Привет, ещё раз
                     </h1>
                     <p class="text-sm text-white/80 font-light leading-relaxed">
-                        Позвольте Вас на пару слов
+                        Хочу тебя немного развлечь
                     </p>
                 </div>
 
                 <!-- Interactive Action Button -->
-                <button id="startButton" class="relative group overflow-hidden w-full py-3.5 px-8 rounded-2xl bg-gradient-to-r from-emerald-500/30 via-pink-500/30 to-emerald-500/30 border border-white/20 text-white font-medium text-lg tracking-wider shadow-lg hover:shadow-pink-500/20 hover:scale-[1.02] active:scale-95 transition-all duration-300">
+                <button id="startButton" class="relative group overflow-hidden w-full py-3.5 px-8 rounded-2xl bg-gradient-to-r from-blue-500/30 via-pink-500/30 to-blue-500/30 border border-white/20 text-white font-medium text-lg tracking-wider shadow-lg hover:shadow-blue-500/20 hover:scale-[1.02] active:scale-95 transition-all duration-300">
                     <span class="relative z-10 flex items-center justify-center gap-2">
                         Начнём?
                         <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -122,10 +131,10 @@
             <!-- Step 2 Content -->
             <div id="cardStep2" class="hidden space-y-6 w-full flex flex-col items-center transition-all duration-500 opacity-0 scale-95">
                 <p class="text-base sm:text-lg text-white/90 font-light leading-relaxed tracking-wide drop-shadow-md px-2">
-                    Мы знакомы не так давно, но мне кажется нам пора познакомиться поближе
+                    Мы знакомы не так давно, но мне уже очень нравится с тобой общаться
                 </p>
 
-                <button id="nextButton1" aria-label="Дальше" class="group relative p-4 rounded-full bg-gradient-to-r from-emerald-500/30 via-pink-500/30 to-emerald-500/30 border border-white/20 text-white shadow-lg hover:shadow-pink-500/20 hover:scale-110 active:scale-95 transition-all duration-300 focus:outline-none">
+                <button id="nextButton1" aria-label="Дальше" class="group relative p-4 rounded-full bg-gradient-to-r from-blue-500/30 via-pink-500/30 to-blue-500/30 border border-white/20 text-white shadow-lg hover:shadow-blue-500/20 hover:scale-110 active:scale-95 transition-all duration-300 focus:outline-none">
                     <svg class="w-6 h-6 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
                     </svg>
@@ -135,10 +144,10 @@
             <!-- Step 3 Content -->
             <div id="cardStep3" class="hidden space-y-6 w-full flex flex-col items-center transition-all duration-500 opacity-0 scale-95">
                 <p class="text-base sm:text-lg text-white/90 font-light leading-relaxed tracking-wide drop-shadow-md px-2">
-                    Общенье это очень хорошо, но пожалуй без встречь всё не то
+                    И я приготовил для тебя такой интерактив
                 </p>
 
-                <button id="nextButton2" aria-label="Дальше" class="group relative p-4 rounded-full bg-gradient-to-r from-emerald-500/30 via-pink-500/30 to-emerald-500/30 border border-white/20 text-white shadow-lg hover:shadow-pink-500/20 hover:scale-110 active:scale-95 transition-all duration-300 focus:outline-none">
+                <button id="nextButton2" aria-label="Дальше" class="group relative p-4 rounded-full bg-gradient-to-r from-blue-500/30 via-pink-500/30 to-blue-500/30 border border-white/20 text-white shadow-lg hover:shadow-blue-500/20 hover:scale-110 active:scale-95 transition-all duration-300 focus:outline-none">
                     <svg class="w-6 h-6 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
                     </svg>
@@ -148,10 +157,10 @@
             <!-- Step 4 Content -->
             <div id="cardStep4" class="hidden space-y-6 w-full flex flex-col items-center transition-all duration-500 opacity-0 scale-95">
                 <p class="text-base sm:text-lg text-white/90 font-light leading-relaxed tracking-wide drop-shadow-md px-2">
-                    Давай выберем время, место и.....
+                    Как думаешь, что там?
                 </p>
 
-                <button id="nextButton3" aria-label="Дальше" class="group relative p-4 rounded-full bg-gradient-to-r from-emerald-500/30 via-pink-500/30 to-emerald-500/30 border border-white/20 text-white shadow-lg hover:shadow-pink-500/20 hover:scale-110 active:scale-95 transition-all duration-300 focus:outline-none">
+                <button id="nextButton3" aria-label="Узнать" class="group relative p-4 rounded-full bg-gradient-to-r from-blue-500/30 via-pink-500/30 to-blue-500/30 border border-white/20 text-white shadow-lg hover:shadow-blue-500/20 hover:scale-110 active:scale-95 transition-all duration-300 focus:outline-none">
                     <svg class="w-6 h-6 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
                     </svg>
@@ -161,31 +170,31 @@
             <!-- Step 5 Content -->
             <div id="cardStep5" class="hidden space-y-4 w-full flex flex-col items-center transition-all duration-500 opacity-0 scale-95">
                 <p class="text-base text-white/90 font-light leading-relaxed tracking-wide drop-shadow-md px-2 text-center">
-                    Детали нашей встречи:
+                    Предлагаю тебе выбрать нашу прогулку:
                 </p>
 
                 <div class="w-full space-y-2.5 text-left text-xs sm:text-sm">
                     <div class="grid grid-cols-2 gap-2">
                         <div>
                             <label class="block font-light text-white/70 mb-1 ml-1">Дата</label>
-                            <input type="date" id="meetingDate" class="w-full bg-white/10 border border-white/20 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-pink-400/50 transition-colors backdrop-blur-md">
+                            <input type="date" id="meetingDate" class="w-full bg-white/10 border border-white/20 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-blue-400/60 transition-colors backdrop-blur-md">
                         </div>
                         <div>
                             <label class="block font-light text-white/70 mb-1 ml-1">Время</label>
-                            <input type="time" id="meetingTime" class="w-full bg-white/10 border border-white/20 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-pink-400/50 transition-colors backdrop-blur-md">
+                            <input type="time" id="meetingTime" class="w-full bg-white/10 border border-white/20 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-blue-400/60 transition-colors backdrop-blur-md">
                         </div>
                     </div>
                     <div>
                         <label class="block font-light text-white/70 mb-1 ml-1">Место встречи</label>
-                        <input type="text" id="meetingLocation" placeholder="Например: Аллея" class="w-full bg-white/10 border border-white/20 rounded-xl px-3 py-2 text-white placeholder-white/40 focus:outline-none focus:border-pink-400/50 transition-colors backdrop-blur-md">
+                        <input type="text" id="meetingLocation" placeholder="Например:у универа" class="w-full bg-white/10 border border-white/20 rounded-xl px-3 py-2 text-white placeholder-white/40 focus:outline-none focus:border-blue-400/60 transition-colors backdrop-blur-md">
                     </div>
                     <div>
                         <label class="block font-light text-white/70 mb-1 ml-1">Пожелания</label>
-                        <input type="text" id="meetingWishes" placeholder="Вкусный кофе и маршмеллоу" class="w-full bg-white/10 border border-white/20 rounded-xl px-3 py-2 text-white placeholder-white/40 focus:outline-none focus:border-pink-400/50 transition-colors backdrop-blur-md">
+                        <input type="text" id="meetingWishes" placeholder="Вкусный кофе или маршмеллоу" class="w-full bg-white/10 border border-white/20 rounded-xl px-3 py-2 text-white placeholder-white/40 focus:outline-none focus:border-blue-400/60 transition-colors backdrop-blur-md">
                     </div>
                 </div>
 
-                <button id="submitMeeting" class="relative group overflow-hidden w-full py-3 px-6 rounded-2xl bg-gradient-to-r from-emerald-500/30 via-pink-500/30 to-emerald-500/30 border border-white/20 text-white font-medium text-base tracking-wider shadow-lg hover:shadow-pink-500/20 hover:scale-[1.02] active:scale-95 transition-all duration-300 mt-1">
+                <button id="submitMeeting" class="relative group overflow-hidden w-full py-3 px-6 rounded-2xl bg-gradient-to-r from-blue-500/30 via-pink-500/30 to-blue-500/30 border border-white/20 text-white font-medium text-base tracking-wider shadow-lg hover:shadow-blue-500/20 hover:scale-[1.02] active:scale-95 transition-all duration-300 mt-1">
                     <span class="relative z-10 flex items-center justify-center gap-2">
                         Создать билет
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -204,11 +213,11 @@
                 </div>
 
                 <div class="flex gap-2 w-full pt-1">
-                    <button id="downloadTicket" class="flex-1 py-2.5 px-3 rounded-xl bg-gradient-to-r from-emerald-500/30 to-pink-500/30 hover:from-emerald-500/50 hover:to-pink-500/50 border border-white/20 text-white text-xs sm:text-sm font-medium transition-all duration-300 flex items-center justify-center gap-1.5 shadow-lg hover:scale-105 active:scale-95">
+                    <button id="downloadTicket" class="flex-1 py-2.5 px-3 rounded-xl bg-gradient-to-r from-blue-500/30 to-pink-500/30 hover:from-blue-500/50 hover:to-pink-500/50 border border-white/20 text-white text-xs sm:text-sm font-medium transition-all duration-300 flex items-center justify-center gap-1.5 shadow-lg hover:scale-105 active:scale-95">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
                         Скачать
                     </button>
-                    <button id="shareTicket" class="flex-1 py-2.5 px-3 rounded-xl bg-gradient-to-r from-pink-500/30 to-emerald-500/30 hover:from-pink-500/50 hover:to-emerald-500/50 border border-white/20 text-white text-xs sm:text-sm font-medium transition-all duration-300 flex items-center justify-center gap-1.5 shadow-lg hover:scale-105 active:scale-95">
+                    <button id="shareTicket" class="flex-1 py-2.5 px-3 rounded-xl bg-gradient-to-r from-pink-500/30 to-blue-500/30 hover:from-pink-500/50 hover:to-blue-500/50 border border-white/20 text-white text-xs sm:text-sm font-medium transition-all duration-300 flex items-center justify-center gap-1.5 shadow-lg hover:scale-105 active:scale-95">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
                         Поделиться
                     </button>
@@ -220,16 +229,18 @@
     <script>
         const CONFIG = {
             musicUrl: 'https://github.com/0urdate/0urdate.github.io/raw/refs/heads/main/zap.mp3',
+            // Палитра обновлена: все зелёные тона заменены на насыщенные и мягкие синие
             palette: [
-                { r: 52,  g: 211, b: 153 },
-                { r: 255, g: 120, b: 180 },
-                { r: 16,  g: 185, b: 129 },
-                { r: 244, g: 114, b: 182 },
-                { r: 4,   g: 120, b: 87  },
-                { r: 251, g: 207, b: 232 }
+                { r: 59,  g: 130, b: 246 }, // Яркий синий (Blue-500)
+                { r: 255, g: 120, b: 180 }, // Нежно-розовый
+                { r: 37,  g: 99,  b: 235 }, // Глубокий синий (Blue-600)
+                { r: 244, g: 114, b: 182 }, // Розовый (Pink-400)
+                { r: 29,  g: 78,  b: 216 }, // Королевский синий (Blue-700)
+                { r: 251, g: 207, b: 232 }  // Светло-розовый
             ],
             speedFactor: 1.0,
-            baseBackground: '#0a0f0d',
+            // Тёмно-синяя подложка для градиентного канваса
+            baseBackground: '#080c17',
             particleDensity: 20000,
             interactiveRadiusRatio: 0.45
         };
@@ -299,7 +310,8 @@
                 this.speedX = (Math.random() - 0.5) * 0.4;
                 this.speedY = -Math.random() * 0.5 - 0.1;
                 this.opacity = Math.random() * 0.6 + 0.2;
-                this.isGreen = Math.random() > 0.5;
+                // Заменили флаг зелёного цвета на синий
+                this.isBlue = Math.random() > 0.5;
             }
 
             update() {
@@ -316,11 +328,12 @@
                 ctx.save();
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = this.isGreen 
-                    ? `rgba(168, 230, 207, ${this.opacity})` 
+                // Светло-голубое/синее свечение частиц вместо мятно-зелёного
+                ctx.fillStyle = this.isBlue 
+                    ? `rgba(147, 197, 253, ${this.opacity})` 
                     : `rgba(255, 192, 203, ${this.opacity})`;
                 ctx.shadowBlur = 8;
-                ctx.shadowColor = this.isGreen ? '#a8e6cf' : '#ffc0cb';
+                ctx.shadowColor = this.isBlue ? '#93c5fd' : '#ffc0cb';
                 ctx.fill();
                 ctx.restore();
             }
@@ -442,18 +455,20 @@
             tCanvas.height = 520;
             const tCtx = tCanvas.getContext('2d');
 
+            // Градиент билета: тёмно-синий -> насыщенный синий -> сливово-розовый -> тёмный фиолетово-розовый
             const bgGradient = tCtx.createLinearGradient(0, 0, tCanvas.width, tCanvas.height);
-            bgGradient.addColorStop(0, '#091510');
-            bgGradient.addColorStop(0.35, '#103e2e');
+            bgGradient.addColorStop(0, '#080e1c');
+            bgGradient.addColorStop(0.35, '#132f5e');
             bgGradient.addColorStop(0.7, '#6b2046');
             bgGradient.addColorStop(1, '#1f0d1a');
             tCtx.fillStyle = bgGradient;
             tCtx.fillRect(0, 0, tCanvas.width, tCanvas.height);
 
+            // Декоративные частицы на фоне билета (синие и розовые)
             for (let i = 0; i < 45; i++) {
                 tCtx.beginPath();
                 tCtx.arc(Math.random() * tCanvas.width, Math.random() * tCanvas.height, Math.random() * 2.5 + 1, 0, Math.PI * 2);
-                tCtx.fillStyle = i % 2 === 0 ? 'rgba(52, 211, 153, 0.3)' : 'rgba(244, 114, 182, 0.3)';
+                tCtx.fillStyle = i % 2 === 0 ? 'rgba(96, 165, 250, 0.35)' : 'rgba(244, 114, 182, 0.3)';
                 tCtx.fill();
             }
 
@@ -479,15 +494,17 @@
 
             tCtx.fillStyle = '#fbcfe8';
             tCtx.font = '500 24px "Plus Jakarta Sans", sans-serif';
-            tCtx.fillText('ПРИГЛАШЕНИЕ НА ПРЕКРАСНЫЙ ВЕЧЕР', 70, 88);
+            tCtx.fillText('ПРИГЛАШЕНИЕ НА ВСТРЕЧУ', 70, 88);
 
-            tCtx.fillStyle = '#34d399';
+            // Подзаголовок билета в светло-синем цвете вместо зелёного
+            tCtx.fillStyle = '#60a5fa';
             tCtx.font = '300 13px "Plus Jakarta Sans", sans-serif';
-            tCtx.fillText('ОСОБЕННЫЙ МОМЕНТ • VIP PASS', 70, 114);
+            tCtx.fillText('Rendez-vous, если угодно)', 70, 114);
 
+            // Иконка колбы на билете вместо жёлтого сердечка
             tCtx.fillStyle = '#fcd34d';
             tCtx.font = '28px sans-serif';
-            tCtx.fillText('💛', 640, 95);
+            tCtx.fillText('🧪', 640, 95);
 
             tCtx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
             tCtx.lineWidth = 1;
@@ -522,7 +539,8 @@
             }
 
             drawField('📅 Дата', displayDate, 70, 175, '#f472b6');
-            drawField('⏰ Время', displayTime, 370, 175, '#34d399');
+            // Значение времени в светло-синем цвете вместо зелёного
+            drawField('⏰ Время', displayTime, 370, 175, '#60a5fa');
             drawField('📍 Место встречи', displayLocation, 70, 265, '#ffffff');
             drawField('💬 Пожелания', displayWishes, 70, 355, '#fbcfe8');
 
@@ -530,9 +548,8 @@
             tCtx.font = '300 12px "Plus Jakarta Sans", sans-serif';
             tCtx.fillText('Действителен для одного прекрасного вечера', 70, 450);
 
-            // 8. Корешок билета (Правая секция) — выравнивание по центру по вертикали
+            // Корешок билета (Правая секция) — выравнивание по центру по вертикали
             tCtx.save();
-            // Вычисляем центр правой зоны билета (X = 720 + (1000-720)/2 = 860, Y = 520 / 2 = 260)
             tCtx.translate((stubX + tCanvas.width) / 2, tCanvas.height / 2);
             tCtx.rotate(-Math.PI / 2);
 
@@ -547,7 +564,7 @@
             // Романтичная надпись вместо номера билета
             tCtx.fillStyle = '#fbcfe8';
             tCtx.font = '300 14px "Plus Jakarta Sans", sans-serif';
-            tCtx.fillText('№: Ты всегда номер один ❤', 0, -35);
+            tCtx.fillText('№: Всегда как первый', 0, -35);
 
             // Штрихкод по центру
             const barHeight = 45;
@@ -556,7 +573,7 @@
             const totalBarcodeWidth = barWidths.reduce((a, b) => a + b, 0) + (barWidths.length - 1) * gap;
 
             let bx = -totalBarcodeWidth / 2;
-            const by = 10; // Отступ штрихкода вниз от текста
+            const by = 10;
 
             tCtx.fillStyle = '#ffffff';
             for (let i = 0; i < barWidths.length; i++) {
@@ -678,14 +695,14 @@
 
                     if (navigator.canShare && navigator.canShare({ files: [file] })) {
                         await navigator.share({
-                            title: 'Приглашение на свидание',
-                            text: 'Вот твой билет на наш особенный вечер! ✨',
+                            title: 'Приглашение на встречу',
+                            text: 'Вот твой билет на наше рандеву',
                             files: [file]
                         });
                     } else if (navigator.share) {
                         await navigator.share({
-                            title: 'Приглашение на свидание',
-                            text: 'Вот твой билет на наш особенный вечер! ✨',
+                            title: 'Приглашение на встречу',
+                            text: 'Вот твой билет на наше рандеву',
                             url: window.location.href
                         });
                     } else {
